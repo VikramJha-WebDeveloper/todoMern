@@ -35,6 +35,11 @@ connectToDatabase();
 app.post("/registration", async(req, res)=>{
   const {name, email, password, confirmPassword} = req.body;
   try{
+    const registeredUser = await UserModel.findOne({email});
+    if(registeredUser){
+      res.status(400).json({errMessage: "This email already exists"});
+      return;
+    }
     if(password === confirmPassword){
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -46,7 +51,7 @@ app.post("/registration", async(req, res)=>{
         res.status(400).json({errMessage: `Registration faild. Please try again later`});
       }
     }else{
-      res.status.json({errMessage: "password did not match"})
+      res.status(400).json({errMessage: "password did not match"})
     }
     
   }catch(err){

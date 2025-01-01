@@ -17,7 +17,7 @@ const Registration = () => {
             headers: {"Content-Type":"application/json"}
         });
         const result = await response.json();
-        if(result){
+        if(result.message){
             navigate("/login");
             toast.success(result.message)
         }else{
